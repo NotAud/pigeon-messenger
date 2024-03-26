@@ -1,4 +1,5 @@
 const { Chatroom } = require("../models/index.js");
+const { v4: uuidv4 } = require("uuid");
 
 async function getChatrooms() {
   try {
@@ -9,4 +10,17 @@ async function getChatrooms() {
   }
 }
 
-module.exports = { getChatrooms };
+async function createChatroom({ name, owner_id }) {
+  try {
+    const chatroomData = await Chatroom.create({
+      id: uuidv4(),
+      name,
+      owner_id,
+    });
+    return chatroomData.get({ plain: true });
+  } catch (err) {
+    throw err;
+  }
+}
+
+module.exports = { getChatrooms, createChatroom };

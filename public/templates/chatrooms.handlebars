@@ -1,0 +1,9 @@
+{{#if chatrooms.length}}
+    {{#each chatrooms}}
+        <div class="chatroom">
+            <a href="/chatroom/{{id}}">{{name}}</a>
+        </div>
+    {{/each}}
+{{else}}
+    <h2>No chatrooms available</h2>
+{{/if}}

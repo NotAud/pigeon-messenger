@@ -9,4 +9,37 @@
         <h2>No chatrooms available</h2>
     {{/if}}
 </div>
-<script>console.log("helloWorld")</script>
+
+<script>
+    const ws = new WebSocket(
+        "ws://localhost:3001/ws/chatrooms",
+    );
+
+    document.addEventListener("DOMContentLoaded", async () => {
+        const rawTemplate = await fetch("/templates/chatrooms.handlebars");
+        const templateSrc = await rawTemplate.text();
+        const template = Handlebars.compile(templateSrc);
+
+        ws.onmessage = (event) => {
+            const chatrooms = JSON.parse(event.data);
+            if (!chatrooms || chatrooms.action !== "new-chatroom") {
+                return;
+            }
+
+            const compiled = template({ chatrooms: chatrooms.data });
+            document.getElementById("chatroom-list").innerHTML = compiled;
+        };
+    })
+
+    ws.onopen = (event) => {
+        console.log("Waiting for new rooms...")
+    };
+
+    ws.onclose = (event) => {
+        console.log("WebSocket is closed now.");
+    };
+
+    ws.onerror = (event) => {
+        console.log("WebSocket has encountered an error.");
+    };
+</script>

@@ -1,7 +1,8 @@
 const router = require("express").Router();
-const { Chatroom } = require("../../models/index.js");
-const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
+const { useChatroomStore } = require("../../util/useChatroomStore");
+
+const chatroomStore = useChatroomStore();
 
 router.post("/", async (req, res) => {
   const token = req.headers.authorization.replace("Bearer ", "");
@@ -22,8 +23,7 @@ router.post("/", async (req, res) => {
   }
 
   try {
-    const chatroomData = await Chatroom.create({
-      id: uuidv4(),
+    const chatroomData = await chatroomStore.create({
       name,
       owner_id: user.id,
     });
