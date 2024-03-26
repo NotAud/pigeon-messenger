@@ -1,9 +1,9 @@
-<div id="chatroom-list">
+<div id="chatroom-list" class="flex flex-col w-full mx-5 gap-y-2">
     {{#if chatrooms.length}}
         {{#each chatrooms}}
-            <div class="chatroom">
-                <a href="/chatroom/{{id}}">{{name}}</a>
-            </div>
+            <a href="/chatroom/{{id}}" class="px-4 py-2 bg-zinc-700 hover:bg-zinc-700/20 transition-all rounded-sm">
+                <span>{{name}}</span>
+            </a>
         {{/each}}
     {{else}}
         <h2>No chatrooms available</h2>

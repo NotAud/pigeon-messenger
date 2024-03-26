@@ -2,17 +2,17 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Messenger</title>
+    <title>Pigeon</title>
     <link rel="stylesheet" href="/styles/main.css" />
     <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
   </head>
 
-  <body>
-    <div class="flex-column justify-space-around">
-      <header class="display-flex justify-space-between align-center p-2">
-        <h1>Hello World!</h1>
+  <body class="bg-zinc-900 text-gray-200">
+    <div class="flex flex-col items-center gap-y-5 h-full pb-10">
+      <header class="flex justify-center text-[28px] align-center p-2">
+        <a href="/">Pigeon</a>
       </header>
-      <main class="container container-fluid mt-5">{{{ body }}}</main>
+      <main class="flex container container-fluid h-full">{{{ body }}}</main>
     </div>
   </body>
 </html>

@@ -5,6 +5,7 @@ const wsRoutes = require("./websocket/websocket.routes");
 router.use("/api", apiRoutes);
 router.use("/ws", wsRoutes);
 router.use("/", require("../controllers/chatrooms.views.routes"));
+router.use("/chatroom", require("../controllers/chatroom.views.routes"));
 
 router.use((req, res) => {
   res.send("<h1>Wrong Route!</h1>");

@@ -12,7 +12,7 @@ router.ws("/", function (ws, req) {
   }
 
   const websocket = useWebsocket();
-  websocket.save("chatroom", ws);
+  websocket.save("chatrooms", ws);
 });
 
 module.exports = router;

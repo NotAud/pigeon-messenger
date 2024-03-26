@@ -1,0 +1,42 @@
+<div id="chatroom" class="flex flex-col w-full mx-5 gap-y-2">
+    {{ chatroom.name }}
+
+    <div class="flex flex-col bg-zinc-700 h-full">
+        <div class="flex-grow"></div>
+        <input class="h-10 bg-zinc-800/80 pl-2"></input>
+    </div>
+</div>
+
+<script>
+    const ws = new WebSocket(
+        "ws://localhost:3001/ws/chat",
+    );
+
+    //document.addEventListener("DOMContentLoaded", async () => {
+    //    const rawTemplate = await fetch("/templates/chatrooms.handlebars");
+    //    const templateSrc = await rawTemplate.text();
+    //    const template = Handlebars.compile(templateSrc);
+//
+    //    ws.onmessage = (event) => {
+    //        const chatrooms = JSON.parse(event.data);
+    //        if (!chatrooms || chatrooms.action !== "new-chatroom") {
+    //            return;
+    //        }
+//
+    //        const compiled = template({ chatrooms: chatrooms.data });
+    //        document.getElementById("chatroom-list").innerHTML = compiled;
+    //    };
+    //})
+
+    ws.onopen = (event) => {
+        console.log("Waiting for new messages...")
+    };
+
+    ws.onclose = (event) => {
+        console.log("WebSocket is closed now.");
+    };
+
+    ws.onerror = (event) => {
+        console.log("WebSocket has encountered an error.");
+    };
+</script>

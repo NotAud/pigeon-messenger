@@ -10,6 +10,15 @@ async function getChatrooms() {
   }
 }
 
+async function getChatroom(id) {
+  try {
+    const chatroom = await Chatroom.findOne({ where: { id } });
+    return chatroom.get({ plain: true });
+  } catch (err) {
+    throw err;
+  }
+}
+
 async function createChatroom({ name, owner_id }) {
   try {
     const chatroomData = await Chatroom.create({
@@ -23,4 +32,4 @@ async function createChatroom({ name, owner_id }) {
   }
 }
 
-module.exports = { getChatrooms, createChatroom };
+module.exports = { getChatrooms, createChatroom, getChatroom };

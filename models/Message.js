@@ -12,6 +12,10 @@ Message.init(
       allowNull: false,
       unique: true,
     },
+    author_id: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     chatroom_id: {
       type: DataTypes.STRING,
       allowNull: false,

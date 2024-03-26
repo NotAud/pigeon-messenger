@@ -30,7 +30,7 @@ function useChatroomStore() {
   }
 
   async function update() {
-    websocket.send("chatroom", {
+    websocket.send("chatrooms", {
       type: "chatroom",
       action: "new-chatroom",
       data: Array.from(CHATROOMS),
