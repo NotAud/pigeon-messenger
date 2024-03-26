@@ -6,10 +6,25 @@ class Message extends Model {}
 
 Message.init(
   {
-    id: DataTypes.STRING,
-    chatroom_id: DataTypes.STRING,
-    message: DataTypes.STRING,
-    created_at: DataTypes.STRING,
+    id: {
+      type: DataTypes.STRING,
+      primaryKey: true,
+      allowNull: false,
+      unique: true,
+    },
+    chatroom_id: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    message: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
   },
   {
     sequelize,

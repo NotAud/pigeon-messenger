@@ -6,16 +6,29 @@ class Chatroom extends Model {}
 
 Chatroom.init(
   {
-    id: DataTypes.STRING,
-    name: DataTypes.STRING,
-    created_at: DataTypes.STRING,
+    id: {
+      type: DataTypes.STRING,
+      primaryKey: true,
+      allowNull: false,
+      unique: true,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
   },
   {
     sequelize,
     timestamps: false,
     freezeTableName: true,
     underscored: true,
-    modelName: "message",
+    modelName: "chatroom",
   }
 );
 
