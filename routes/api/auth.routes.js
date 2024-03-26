@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { Auth } = require("../../models");
+const { Auth } = require("../../models/index.js");
 const { v4: uuidv4 } = require("uuid");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -56,7 +56,7 @@ router.post("/login", async (req, res) => {
   const jwtToken = jwt.sign(
     { id: user.id, username: user.username },
     process.env.JWT_SECRET,
-    { expiresIn: "1h" }
+    { expiresIn: "12h" }
   );
 
   return res.status(200).json({

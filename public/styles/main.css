@@ -1,0 +1,4 @@
+.chatrooms {
+  display: flex;
+  flex-direction: column;
+}

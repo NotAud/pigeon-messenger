@@ -17,6 +17,10 @@ Chatroom.init(
       allowNull: false,
       unique: true,
     },
+    owner_id: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     created_at: {
       type: DataTypes.DATE,
       allowNull: false,

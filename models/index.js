@@ -1,4 +1,4 @@
-const Auth = require("./Auth");
+const Auth = require("./Auth.js");
 const Chatroom = require("./Chatroom");
 const Message = require("./Message");
 
