@@ -45,31 +45,28 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
-  const user = await Auth.findOne({
+  const auth = await Auth.findOne({
     where: { username },
     include: [User],
   });
-  if (!user) {
+  if (!auth) {
     return res.status(400).json({ message: "Invalid username or password" });
   }
 
-  const validatePassword = await bcrypt.compare(password, user.password);
+  const validatePassword = await bcrypt.compare(password, auth.password);
   if (!validatePassword) {
     return res.status(400).json({ message: "Invalid username or password" });
   }
 
   const jwtToken = jwt.sign(
-    { id: user.id, username: user.username },
+    { id: auth.id, username: auth.username },
     process.env.JWT_SECRET,
     { expiresIn: "12h" }
   );
 
   return res.status(200).json({
     access_token: jwtToken,
-    user: {
-      id: user.id,
-      display_name: user.username,
-    },
+    user: auth?.user,
   });
 });
 

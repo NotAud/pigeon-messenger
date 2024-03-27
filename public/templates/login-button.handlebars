@@ -1,5 +1,8 @@
 {{#if valid}}
-    <button id="logout-button" class="hover:text-zinc-400 transition-all">Logout</button>
+    <div class="flex flex-col">
+        <span>Welcome back <span class="underline">{{display_name}}</span></span>
+        <button id="logout-button" class="hover:text-zinc-400 transition-all">Logout</button>
+    </div>
 {{else}}
     <a href="/login" class="hover:text-zinc-400 transition-all">Login</a>
 {{/if}}

@@ -15,6 +15,7 @@ Auth.hasOne(User, {
   foreignKey: "id",
 });
 
+// Prob remove
 User.belongsTo(Auth, {
   foreignKey: "id",
 });
@@ -23,6 +24,7 @@ User.belongsTo(Auth, {
 //   foreignKey: "author_id",
 // });
 
+// Prob remove
 User.hasMany(Message, {
   foreignKey: "author_id",
 });
