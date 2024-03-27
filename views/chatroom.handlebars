@@ -2,7 +2,7 @@
     {{ chatroom.name }}
 
     <div class="flex flex-col bg-zinc-700 h-full rounded-sm">
-        <div class="flex flex-grow flex-col-reverse py-1">
+        <div id="chat-messages" class="flex flex-grow justify-end flex-col py-1">
             {{#if chatroom.messages.length}}
                 {{#each chatroom.messages}}
                     <div class="flex">
@@ -25,25 +25,37 @@
         "ws://localhost:3001/ws/chatroom/{{ chatroom.id }}",
     );
 
+    const chatroom_id = {{{json chatroom.id}}};
     const messages = {{{json chatroom.messages}}};
-    console.log(messages)
 
     document.addEventListener("DOMContentLoaded", async () => {
         const textInput = document.querySelector("#chat-input");
-        textInput.addEventListener("keydown", (event) => {
-            if (event.key === "Enter") {
-                ws.send(JSON.stringify({ message: textInput.value }));
-                textInput.value = "";
-            }
-        });
 
+        const access_token = localStorage.getItem("access_token");
+        if (access_token) {
+            textInput.addEventListener("keydown", (event) => {
+                if (event.key === "Enter") {
+                    const wsRequest = { action: "new-message", message: textInput.value, chatroom_id, access_token };
+
+                    ws.send(JSON.stringify(wsRequest));
+                    textInput.value = "";
+                }
+            });
+        }
+
+        const rawTemplate = await fetch("/templates/messages.handlebars");
+        const templateSrc = await rawTemplate.text();
+        const template = Handlebars.compile(templateSrc);
         ws.onmessage = (event) => {
-            const message = JSON.parse(event.data);
-            if (!message || message.action !== "new-message") {
+            const incoming = JSON.parse(event.data);
+            if (!incoming || incoming?.action !== "new-message" || !incoming?.data?.author?.display_name || !incoming?.data?.message) {
                 return;
             }
 
-            console.log(message)
+            messages.push({ author: incoming.data.author, message: incoming.data.message });
+
+            const compiled = template({ messages });
+            document.getElementById("chat-messages").innerHTML = compiled;
         };
     });
 

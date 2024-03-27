@@ -1,4 +1,4 @@
-const { Message } = require("../models/index.js");
+const { Message, User } = require("../models/index.js");
 const { useAuth } = require("../util/useAuth");
 const { v4: uuidv4 } = require("uuid");
 
@@ -31,8 +31,8 @@ async function getMessages(data) {
  * AUTHENTICATED
  */
 
-async function createMessage(token, data) {
-  const user = auth.verifyToken(token);
+async function createMessage(access_token, data) {
+  const user = auth.verifyToken(access_token);
   if (!user) {
     return res.status(401).json({
       message: "Invalid token",
@@ -53,7 +53,12 @@ async function createMessage(token, data) {
       author_id: user.id,
       message,
     });
-    return messageData.get({ plain: true });
+
+    const messageWithAuthor = await Message.findByPk(messageData.id, {
+      include: [{ model: User, as: "author" }],
+    });
+
+    return messageWithAuthor.get({ plain: true });
   } catch (err) {
     throw err;
   }

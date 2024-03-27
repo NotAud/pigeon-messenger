@@ -25,7 +25,7 @@ async function getChatroom(id) {
         {
           model: Message,
           limit: 100,
-          order: [["created_at", "DESC"]],
+          order: [["created_at", "ASC"]],
           include: [{ model: User, as: "author" }],
         },
       ],

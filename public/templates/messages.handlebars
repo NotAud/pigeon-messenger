@@ -1,0 +1,12 @@
+{{#if messages.length}}
+    {{#each messages}}
+        <div class="flex">
+            <div class="flex px-2">
+                <span>{{ author.display_name }} -</span>
+            </div>
+            <span>{{ message }}</span>
+        </div>
+    {{/each}}
+{{else}}
+    <h2>No messages yet</h2>
+{{/if}}
