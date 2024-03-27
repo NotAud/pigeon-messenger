@@ -11,6 +11,10 @@ Message.belongsTo(Chatroom, {
   foreignKey: "chatroom_id",
 });
 
+Auth.hasOne(User, {
+  foreignKey: "id",
+});
+
 User.belongsTo(Auth, {
   foreignKey: "id",
 });

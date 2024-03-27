@@ -1,14 +1,14 @@
 const router = require("express").Router();
 const { getChatroom } = require("../api/chatrooms.api.js");
 
-router.get("/:chatroomID", async (req, res) => {
-  const id = req.params.chatroomID;
-  const chatroomData = await getChatroom(id);
-  if (!chatroomData) {
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  const data = await getChatroom(id);
+  if (!data) {
     return res.redirect("/");
   }
 
-  res.render("chatroom", { chatroom: chatroomData });
+  res.render("chatroom", { chatroom: data });
 });
 
 router.use(function (req, res) {

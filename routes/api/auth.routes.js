@@ -1,14 +1,17 @@
 const router = require("express").Router();
-const { Auth } = require("../../models/index.js");
+const { Auth, User } = require("../../models/index.js");
 const { v4: uuidv4 } = require("uuid");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { useAuth } = require("../../util/useAuth");
+
+const auth = useAuth();
 
 router.post("/register", async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) {
     return res.status(400).json({
-      message: "Please provide a username, password, and display name",
+      message: "Please provide a username, password",
     });
   }
 
@@ -42,7 +45,10 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
-  const user = await Auth.findOne({ where: { username } });
+  const user = await Auth.findOne({
+    where: { username },
+    include: [User],
+  });
   if (!user) {
     return res.status(400).json({ message: "Invalid username or password" });
   }
@@ -60,7 +66,24 @@ router.post("/login", async (req, res) => {
 
   return res.status(200).json({
     access_token: jwtToken,
-    user_id: user.id,
+    user: {
+      id: user.id,
+      display_name: user.username,
+    },
+  });
+});
+
+router.get("/validate", async (req, res) => {
+  const token = req.headers.authorization.replace("Bearer ", "");
+  const user = auth.verifyToken(token);
+  if (!user) {
+    return res.status(401).json({
+      message: "Invalid token",
+    });
+  }
+
+  return res.status(200).json({
+    message: "Valid token",
   });
 });
 

@@ -4,8 +4,11 @@ const wsRoutes = require("./websocket/websocket.routes");
 
 router.use("/api", apiRoutes);
 router.use("/ws", wsRoutes);
-router.use("/", require("../controllers/chatrooms.views.routes"));
-router.use("/chatroom", require("../controllers/chatroom.views.routes"));
+
+router.use("/login", require("../controllers/login.controller"));
+router.use("/register", require("../controllers/register.controller"));
+router.use("/", require("../controllers/chatrooms.controller"));
+router.use("/chatroom", require("../controllers/chatroom.controller"));
 
 router.use((req, res) => {
   res.send("<h1>Wrong Route!</h1>");

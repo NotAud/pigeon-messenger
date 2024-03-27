@@ -7,12 +7,60 @@
     <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
   </head>
 
-  <body class="bg-zinc-900 text-gray-200">
+  <body class="bg-zinc-950 text-gray-200">
     <div class="flex flex-col items-center gap-y-5 h-full pb-10">
-      <header class="flex justify-center text-[28px] align-center p-2">
-        <a href="/">Pigeon</a>
+      <header class="flex bg-zinc-900/20 w-full justify-between items-end py-2 px-4 border-b border-zinc-900">
+        <a href="/" class="text-[28px]">Pigeon</a>
+        <div id="login-container"></div>
       </header>
       <main class="flex container container-fluid h-full">{{{ body }}}</main>
     </div>
   </body>
 </html>
+
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const rawTemplate = await fetch("/templates/login-button.handlebars");
+    const templateSrc = await rawTemplate.text();
+    const template = Handlebars.compile(templateSrc);
+
+    const data = await templateData();
+    const compiled = template({ valid: data });
+    document.getElementById("login-container").innerHTML = compiled;
+
+    const logoutButton = document.getElementById("logout-button");
+    if (logoutButton) {
+      logoutButton.addEventListener("click", async () => {  
+        const token = localStorage.removeItem("access_token");
+        const user_id = localStorage.removeItem("user")
+
+        window.location.href = "/login";
+      })
+    }
+  });
+
+  async function templateData() {
+    const accessToken = localStorage.getItem("access_token");
+    if (!accessToken) {
+      return null;
+    }
+
+    const response = await fetch("/api/auth/validate", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+        },
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+        return data;
+    } else {
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("user");
+        return null;
+    }
+  }
+</script>

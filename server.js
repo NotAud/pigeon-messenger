@@ -11,11 +11,7 @@ const expressWs = require("express-ws")(app);
 app.engine(
   "handlebars",
   engine({
-    helpers: {
-      json: function (context) {
-        return JSON.stringify(context);
-      },
-    },
+    helpers: require("./helpers/handlebars-helpers.js"),
   })
 );
 app.set("view engine", "handlebars");

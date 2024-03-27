@@ -3,6 +3,10 @@ const { useAuth } = require("../util/useAuth");
 
 const auth = useAuth();
 
+/**
+ * AUTHENTICATED
+ */
+
 async function createUser(token, data) {
   const user = auth.verifyToken(token);
   if (!user) {

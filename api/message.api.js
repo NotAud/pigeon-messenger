@@ -4,6 +4,33 @@ const { v4: uuidv4 } = require("uuid");
 
 const auth = useAuth();
 
+/**
+ * PUBLIC
+ */
+
+async function getMessages(data) {
+  const { chatroom_id } = data;
+  if (!chatroom_id) {
+    return res.status(400).json({
+      message: "Missing required fields",
+    });
+  }
+
+  try {
+    const messages = await Message.findAll({
+      where: { chatroom_id },
+      raw: true,
+    });
+    return messages;
+  } catch (err) {
+    throw err;
+  }
+}
+
+/**
+ * AUTHENTICATED
+ */
+
 async function createMessage(token, data) {
   const user = auth.verifyToken(token);
   if (!user) {
@@ -27,25 +54,6 @@ async function createMessage(token, data) {
       message,
     });
     return messageData.get({ plain: true });
-  } catch (err) {
-    throw err;
-  }
-}
-
-async function getMessages(data) {
-  const { chatroom_id } = data;
-  if (!chatroom_id) {
-    return res.status(400).json({
-      message: "Missing required fields",
-    });
-  }
-
-  try {
-    const messages = await Message.findAll({
-      where: { chatroom_id },
-      raw: true,
-    });
-    return messages;
   } catch (err) {
     throw err;
   }

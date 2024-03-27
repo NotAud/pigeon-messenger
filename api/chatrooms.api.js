@@ -4,6 +4,10 @@ const { v4: uuidv4 } = require("uuid");
 
 const auth = useAuth();
 
+/**
+ * PUBLIC
+ */
+
 async function getChatrooms() {
   try {
     const chatrooms = await Chatroom.findAll({ raw: true });
@@ -36,6 +40,10 @@ async function getChatroom(id) {
     throw err;
   }
 }
+
+/**
+ * AUTHENTICATED
+ */
 
 async function createChatroom(token, data) {
   const user = auth.verifyToken(token);
