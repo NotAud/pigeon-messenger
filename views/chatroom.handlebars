@@ -1,16 +1,51 @@
-<div id="chatroom" class="flex flex-col w-full mx-5 gap-y-2">
+<div id="chatroom-container" class="flex flex-col w-full mx-5 gap-y-2">
     {{ chatroom.name }}
 
-    <div class="flex flex-col bg-zinc-700 h-full">
-        <div class="flex-grow"></div>
-        <input class="h-10 bg-zinc-800/80 pl-2"></input>
+    <div class="flex flex-col bg-zinc-700 h-full rounded-sm">
+        <div class="flex flex-grow flex-col-reverse py-1">
+            {{#if chatroom.messages.length}}
+                {{#each chatroom.messages}}
+                    <div class="flex">
+                        <div class="flex px-2">
+                            <span>{{ author.display_name }} -</span>
+                        </div>
+                        <span>{{ message }}</span>
+                    </div>
+                {{/each}}
+            {{else}}
+                <h2>No messages yet</h2>
+            {{/if}}
+        </div>
+        <input id="chat-input" class="h-10 bg-zinc-800/80 pl-2"></input>
     </div>
 </div>
 
 <script>
     const ws = new WebSocket(
-        "ws://localhost:3001/ws/chat",
+        "ws://localhost:3001/ws/chatroom/{{ chatroom.id }}",
     );
+
+    const messages = {{{json chatroom.messages}}};
+    console.log(messages)
+
+    document.addEventListener("DOMContentLoaded", async () => {
+        const textInput = document.querySelector("#chat-input");
+        textInput.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                ws.send(JSON.stringify({ message: textInput.value }));
+                textInput.value = "";
+            }
+        });
+
+        ws.onmessage = (event) => {
+            const message = JSON.parse(event.data);
+            if (!message || message.action !== "new-message") {
+                return;
+            }
+
+            console.log(message)
+        };
+    });
 
     //document.addEventListener("DOMContentLoaded", async () => {
     //    const rawTemplate = await fetch("/templates/chatrooms.handlebars");

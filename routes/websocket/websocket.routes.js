@@ -1,6 +1,8 @@
 const router = require("express").Router();
-const chatroomWebsocket = require("./chatrooms.websocket");
+const chatroomsWebsocket = require("./chatrooms.websocket");
+const chatroomWebsocket = require("./chatroom.websocket");
 
-router.use("/chatrooms", chatroomWebsocket);
+router.use("/chatrooms", chatroomsWebsocket);
+router.use("/chatroom", chatroomWebsocket);
 
 module.exports = router;

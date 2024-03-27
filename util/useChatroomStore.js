@@ -1,5 +1,5 @@
 const { useWebsocket } = require("../util/useWebsocket");
-const { getChatrooms, createChatroom } = require("../api/chatrooms.routes");
+const { getChatrooms, createChatroom } = require("../api/chatrooms.api");
 
 const websocket = useWebsocket();
 const CHATROOMS = new Set();
@@ -16,9 +16,9 @@ function useChatroomStore() {
     }
   }
 
-  async function create({ name, owner_id }) {
+  async function create(token, data) {
     try {
-      const chatroomData = await createChatroom({ name, owner_id });
+      const chatroomData = await createChatroom(token, data);
 
       CHATROOMS.add(chatroomData);
       update();

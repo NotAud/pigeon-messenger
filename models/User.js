@@ -2,9 +2,9 @@ const { Model, DataTypes } = require("sequelize");
 
 const sequelize = require("../config/connection.js");
 
-class Auth extends Model {}
+class User extends Model {}
 
-Auth.init(
+User.init(
   {
     id: {
       type: DataTypes.STRING,
@@ -12,14 +12,15 @@ Auth.init(
       allowNull: false,
       unique: true,
     },
-    username: {
+    display_name: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
     },
-    password: {
-      type: DataTypes.STRING,
+    created_at: {
+      type: DataTypes.DATE,
       allowNull: false,
+      defaultValue: DataTypes.NOW,
     },
   },
   {
@@ -27,8 +28,8 @@ Auth.init(
     timestamps: false,
     freezeTableName: true,
     underscored: true,
-    modelName: "auth",
+    modelName: "user",
   }
 );
 
-module.exports = Auth;
+module.exports = User;

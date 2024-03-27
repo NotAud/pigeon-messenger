@@ -8,7 +8,16 @@ const PORT = process.env.PORT || 3001;
 
 const expressWs = require("express-ws")(app);
 
-app.engine("handlebars", engine());
+app.engine(
+  "handlebars",
+  engine({
+    helpers: {
+      json: function (context) {
+        return JSON.stringify(context);
+      },
+    },
+  })
+);
 app.set("view engine", "handlebars");
 app.set("views", "./views");
 
