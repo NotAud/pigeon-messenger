@@ -11,7 +11,7 @@ const auth = useAuth();
 async function getMessages(data) {
   const { chatroom_id } = data;
   if (!chatroom_id) {
-    throw { message: "Missing required fields" };
+    return { message: "Missing required fields" };
   }
 
   try {
@@ -24,7 +24,7 @@ async function getMessages(data) {
     });
     return messages;
   } catch (err) {
-    throw { message: err.message };
+    return { message: err.message };
   }
 }
 
@@ -35,12 +35,12 @@ async function getMessages(data) {
 async function createMessage(access_token, data) {
   const user = auth.verifyToken(access_token);
   if (!user) {
-    throw { message: "Invalid token" };
+    return { message: "Invalid token" };
   }
 
   const { chatroom_id, message } = data;
   if (!chatroom_id || !user.id || !message) {
-    throw { message: "Missing required fields" };
+    return { message: "Missing required fields" };
   }
 
   try {
@@ -60,7 +60,7 @@ async function createMessage(access_token, data) {
 
     return messageWithAuthor.get({ plain: true });
   } catch (err) {
-    throw { message: err.message };
+    return { message: err.message };
   }
 }
 
