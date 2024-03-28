@@ -5,15 +5,16 @@
     <title>Pigeon</title>
     <link rel="stylesheet" href="/styles/main.css" />
     <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+    <script src="https://kit.fontawesome.com/7d14b767c7.js" crossorigin="anonymous"></script>
   </head>
 
   <body class="bg-zinc-950 text-gray-200">
     <div class="flex flex-col items-center gap-y-5 h-full pb-10">
-      <header class="flex bg-zinc-900/20 w-full justify-between items-end py-2 px-4 border-b border-zinc-900">
+      <header class="flex bg-zinc-900/20 w-full min-h-[65px] justify-between items-end py-2 px-4 border-b border-zinc-900">
         <a href="/" class="text-[28px]">Pigeon</a>
         <div id="login-container"></div>
       </header>
-      <main class="flex container container-fluid h-full">{{{ body }}}</main>
+      <main class="flex container container-fluid h-full min-h-0">{{{ body }}}</main>
     </div>
   </body>
 </html>
@@ -25,8 +26,7 @@
     const template = Handlebars.compile(templateSrc);
 
     const data = await authGuard();
-    console.log(data.user.display_name)
-    const compiled = template({ valid: data.isValid, display_name: data?.user?.display_name });
+    const compiled = template({ valid: data?.isValid, display_name: data?.user?.display_name });
     document.getElementById("login-container").innerHTML = compiled;
 
     const logoutButton = document.getElementById("logout-button");
