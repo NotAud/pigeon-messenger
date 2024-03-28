@@ -1,8 +1,11 @@
+const { timeAgo } = require("../util/timeAgo");
+
 module.exports = {
   json: function (context) {
     return JSON.stringify(context);
   },
-  auth: function (context) {
-    return context.auth;
+  date: function (context) {
+    const date = new Date(context);
+    return timeAgo(date);
   },
 };

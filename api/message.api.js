@@ -11,19 +11,20 @@ const auth = useAuth();
 async function getMessages(data) {
   const { chatroom_id } = data;
   if (!chatroom_id) {
-    return res.status(400).json({
-      message: "Missing required fields",
-    });
+    throw { message: "Missing required fields" };
   }
 
   try {
     const messages = await Message.findAll({
       where: { chatroom_id },
+      attributes: ["message", "created_at"],
+      include: [{ model: User, as: "author", attributes: ["display_name"] }],
       raw: true,
+      nest: true,
     });
     return messages;
   } catch (err) {
-    throw err;
+    throw { message: err.message };
   }
 }
 
@@ -34,16 +35,12 @@ async function getMessages(data) {
 async function createMessage(access_token, data) {
   const user = auth.verifyToken(access_token);
   if (!user) {
-    return res.status(401).json({
-      message: "Invalid token",
-    });
+    throw { message: "Invalid token" };
   }
 
   const { chatroom_id, message } = data;
   if (!chatroom_id || !user.id || !message) {
-    return res.status(400).json({
-      message: "Missing required fields",
-    });
+    throw { message: "Missing required fields" };
   }
 
   try {
@@ -55,12 +52,15 @@ async function createMessage(access_token, data) {
     });
 
     const messageWithAuthor = await Message.findByPk(messageData.id, {
-      include: [{ model: User, as: "author" }],
+      attributes: ["message", "created_at"],
+      include: [
+        { model: User, as: "author", attributes: ["id", "display_name"] },
+      ],
     });
 
     return messageWithAuthor.get({ plain: true });
   } catch (err) {
-    throw err;
+    throw { message: err.message };
   }
 }
 

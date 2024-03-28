@@ -1,7 +1,12 @@
 {{#if chatrooms.length}}
     {{#each chatrooms}}
-        <a href="/chatroom/{{id}}" class="px-4 py-2 bg-zinc-700 hover:bg-zinc-700/20 transition-all rounded-sm">
+        <a href="/chatroom/{{id}}" class="flex justify-between items-center px-4 py-2 bg-zinc-900/80 hover:bg-zinc-800/80 transition-all rounded-sm">
             <span>{{name}}</span>
+            <div class="relative">
+                <div class="chatroom-info" data-info="{{owner.display_name}}" data-timestamp="{{date created_at}}">
+                    <i class="fa-solid fa-circle-info"></i>
+                </div>
+            </div>
         </a>
     {{/each}}
 {{else}}

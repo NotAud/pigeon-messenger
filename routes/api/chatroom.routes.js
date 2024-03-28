@@ -1,13 +1,11 @@
 const router = require("express").Router();
-const { useChatroomStore } = require("../../util/useChatroomStore");
-const { getChatroom } = require("../../api/chatrooms.api.js");
-
-const chatroomStore = useChatroomStore();
+const { getChatroom, createChatroom } = require("../../api/chatrooms.api.js");
 
 router.post("/", async (req, res) => {
   try {
-    const token = req.headers.authorization.replace("Bearer ", "");
-    const chatroomData = await chatroomStore.create(token, req.body);
+    const access_token = req.headers.authorization.replace("Bearer ", "");
+    const data = await createChatroom(access_token, req.body);
+    const chatroomData = data;
     res.status(200).json(chatroomData);
   } catch (err) {
     res.status(400).json(err);

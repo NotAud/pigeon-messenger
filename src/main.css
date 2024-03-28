@@ -36,3 +36,13 @@ input {
   background: #555;
   cursor: pointer;
 }
+
+.chatroom-info:hover::after {
+  @apply flex items-center bg-zinc-900 px-2 py-8 rounded-md;
+  content: "Created by: " attr(data-info) "\a Created at: "attr(data-timestamp);
+  white-space: pre;
+  position: absolute;
+  top: 0;
+  right: calc(100% + 8px);
+  bottom: 0;
+}

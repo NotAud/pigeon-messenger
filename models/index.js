@@ -3,6 +3,15 @@ const User = require("./User");
 const Chatroom = require("./Chatroom");
 const Message = require("./Message");
 
+User.hasMany(Chatroom, {
+  foreignKey: "owner_id",
+});
+
+Chatroom.belongsTo(User, {
+  foreignKey: "owner_id",
+  as: "owner",
+});
+
 Chatroom.hasMany(Message, {
   foreignKey: "chatroom_id",
 });
@@ -15,16 +24,10 @@ Auth.hasOne(User, {
   foreignKey: "id",
 });
 
-// Prob remove
 User.belongsTo(Auth, {
   foreignKey: "id",
 });
 
-// User.hasMany(Message, {
-//   foreignKey: "author_id",
-// });
-
-// Prob remove
 User.hasMany(Message, {
   foreignKey: "author_id",
 });

@@ -68,6 +68,7 @@
             if (response.ok) {
                 localStorage.setItem("access_token", data.access_token);
                 
+                console.log(data.user)
                 if (data.user) {
                     localStorage.setItem("user", JSON.stringify(data.user));
                 }
