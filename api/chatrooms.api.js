@@ -91,6 +91,7 @@ async function createChatroom(access_token, data) {
   }
 }
 
+// TODO: DELETE MESSAGES AFTER DELETING CHATROOM
 async function deleteChatroom(access_token, data) {
   const user = auth.verifyToken(access_token);
   if (!user) {
