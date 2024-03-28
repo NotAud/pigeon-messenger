@@ -12,7 +12,9 @@ async function getChatrooms() {
   try {
     const chatrooms = await Chatroom.findAll({
       attributes: ["id", "name", "created_at"],
-      include: [{ model: User, as: "owner", attributes: ["display_name"] }],
+      include: [
+        { model: User, as: "owner", attributes: ["id", "display_name"] },
+      ],
       order: [["created_at", "ASC"]],
       raw: true,
       nest: true,
@@ -41,7 +43,7 @@ async function getChatroom(id) {
             },
           ],
         },
-        { model: User, as: "owner", attributes: ["display_name"] },
+        { model: User, as: "owner", attributes: ["id", "display_name"] },
       ],
     });
 
@@ -79,7 +81,9 @@ async function createChatroom(access_token, data) {
 
     const chatroomWithOwner = await Chatroom.findByPk(chatroomData.id, {
       attributes: ["id", "name", "created_at"],
-      include: [{ model: User, as: "owner", attributes: ["display_name"] }],
+      include: [
+        { model: User, as: "owner", attributes: ["id", "display_name"] },
+      ],
     });
     return chatroomWithOwner.get({ plain: true });
   } catch (err) {
@@ -87,4 +91,37 @@ async function createChatroom(access_token, data) {
   }
 }
 
-module.exports = { getChatrooms, createChatroom, getChatroom };
+async function deleteChatroom(access_token, data) {
+  const user = auth.verifyToken(access_token);
+  if (!user) {
+    return { message: "Invalid token" };
+  }
+
+  const { id: chatroom_id } = data;
+  if (!chatroom_id || !user.id) {
+    return { message: "Missing required fields" };
+  }
+
+  try {
+    const chatroom = await Chatroom.findOne({
+      attributes: ["id", "owner_id"],
+      where: { id: chatroom_id },
+      raw: true,
+    });
+
+    if (chatroom.owner_id != user.id) {
+      return { message: "Unauthorized" };
+    }
+
+    await Chatroom.destroy({
+      where: { id: chatroom_id },
+      raw: true,
+    });
+
+    return chatroom_id;
+  } catch (err) {
+    return { message: err.message };
+  }
+}
+
+module.exports = { getChatrooms, createChatroom, getChatroom, deleteChatroom };

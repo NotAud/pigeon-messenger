@@ -5,6 +5,13 @@
             <span class="text-[16px]">Back</span>
         </a>
         {{ chatroom.name }}
+        <div class="flex absolute items-center h-full right-2 top-0">
+            <div class="relative">
+                <div class="chatroom-info" data-owner="{{chatroom.owner.display_name}}" data-timestamp="{{date chatroom.created_at}}">
+                    <i class="fa-solid fa-circle-info"></i>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="flex flex-col bg-zinc-900/20 h-full rounded-sm min-h-0">
