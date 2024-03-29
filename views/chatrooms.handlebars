@@ -1,5 +1,5 @@
 <div class="flex flex-col gap-y-2 items-end w-full mx-5">
-    <button id="overlay-button" class="px-4 py-2 bg-zinc-900/80 rounded-md hover:bg-zinc-800/80">Create New Chat</button>
+    <button id="overlay-button" class="px-4 py-2 bg-zinc-900/80 rounded-md hover:bg-zinc-800/80 floating">Create New Chat</button>
     <div id="chatroom-list" class="flex flex-col-reverse w-full gap-y-2">
         {{#if chatrooms.length}}
             {{#each chatrooms}}
@@ -13,7 +13,9 @@
                 </a>
             {{/each}}
         {{else}}
-            <h2>No chatrooms available</h2>
+            <button class="flex justify-center px-5 py-4 mt-10 rounded-md transition-all sunken hover:border hover:border-zinc-900/30 hover:scale-105">
+                <span class="font-medium select-none">No Chatrooms yet, Try making one!</span>
+            </button>
         {{/if}}
     </div>
     <div id="overlay" class="hidden flex items-center justify-center absolute w-full h-full z-10 top-0 left-0 bg-zinc-950/80">
@@ -48,7 +50,7 @@
 
 <script>
     const ws = new WebSocket(
-        "ws://localhost:3001/ws/chatrooms",
+        `ws://${${location.hostname}}/ws/chatrooms`,
     );
 
     const chatrooms = {{{json chatrooms}}};

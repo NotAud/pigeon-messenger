@@ -4,6 +4,7 @@
 
 html,
 body {
+  color: #e3e3e3;
   height: 100%;
 }
 
@@ -45,4 +46,24 @@ input {
   top: 0;
   right: calc(100% + 8px);
   bottom: 0;
+}
+
+.sunken {
+  box-shadow: 1px 1px 9px black inset;
+  border: 1px solid rgb(8, 8, 8);
+  background-color: rgb(16, 16, 16);
+}
+
+.floating {
+  @apply transition-all ease-in border-b-4 border-b-zinc-950 font-medium;
+  box-shadow: 0px 0px 6px 6px rgb(21 21 21 / 20%);
+}
+
+.floating:hover {
+  box-shadow: 0 2px 5px 7px rgb(21 21 21 / 40%);
+  transform: translateY(-3px) scale(1.02);
+}
+
+#overlay-background {
+  @apply backdrop-blur-sm;
 }

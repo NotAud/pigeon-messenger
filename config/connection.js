@@ -12,7 +12,7 @@ if (process.env.JAWSDB_URL) {
     process.env.POSTGRES_PASSWORD,
     {
       host: "localhost",
-      dialect: "mysql",
+      dialect: "postgres",
       dialectOptions: {
         decimalNumbers: true,
       },
