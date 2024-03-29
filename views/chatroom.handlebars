@@ -35,7 +35,7 @@
 
 <script>
     const ws = new WebSocket(
-        `ws://${location.hostname}/ws/chatroom/{{ chatroom.id }}`,
+        `wss://${location.hostname}/ws/chatroom/{{ chatroom.id }}`,
     );
 
     const chatroom_id = {{{json chatroom.id}}};
