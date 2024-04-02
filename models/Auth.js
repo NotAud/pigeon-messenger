@@ -21,16 +21,6 @@ Auth.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    display_name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    created_at: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-    },
   },
   {
     sequelize,

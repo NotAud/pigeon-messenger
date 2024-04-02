@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  color: #e3e3e3;
+  height: 100%;
+}
+
+textarea,
+input {
+  outline: none;
+}
+
+#chat-messages {
+  overflow-anchor: none;
+}
+
+/* width */
+::-webkit-scrollbar {
+  @apply w-2;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  @apply bg-zinc-800/70 rounded-full;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+  cursor: pointer;
+}
+
+.chatroom-info:hover::after {
+  @apply flex items-center bg-zinc-900 px-2 py-8 rounded-md;
+  content: "Created by: " attr(data-owner) "\a Created at: "attr(data-timestamp);
+  white-space: pre;
+  position: absolute;
+  top: 0;
+  right: calc(100% + 8px);
+  bottom: 0;
+}
+
+.sunken {
+  box-shadow: 1px 1px 9px black inset;
+  border: 1px solid rgb(8, 8, 8);
+  background-color: rgb(16, 16, 16);
+}
+
+.floating {
+  @apply transition-all ease-in border-b-4 border-b-zinc-950 font-medium;
+  box-shadow: 0px 0px 6px 6px rgb(21 21 21 / 20%);
+}
+
+.floating:hover {
+  box-shadow: 0 2px 5px 7px rgb(21 21 21 / 40%);
+  transform: translateY(-3px) scale(1.02);
+}
+
+#overlay-background {
+  @apply backdrop-blur-sm;
+}
+
+.user-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.user-dropdown-content {
+  @apply bg-zinc-900 right-0 rounded-md overflow-hidden;
+  display: none;
+  position: absolute;
+  min-width: 160px;
+  z-index: 1;
+}
+
+.user-dropdown:hover .user-dropdown-content {
+  display: block;
+}

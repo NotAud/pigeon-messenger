@@ -1,0 +1,72 @@
+<div class="flex flex-col gap-y-2 w-full h-full items-center justify-center">
+    <div class="relative gap-y-2 h-fit min-w-[275px]">
+        <div class="bg-zinc-900/40 rounded-md pb-4 pt-1 border border-zinc-900">
+            <div class="flex flex-col justify-center gap-y-2">
+                <div class="text-center">
+                    <h1 class="text-[24px] select-none">Sign-Up</h1>
+                </div>
+                <hr class="mx-2" />
+                <div class="flex flex-col px-4 gap-y-5">
+                    <div class="flex flex-col gap-y-2">
+                        <div class="flex flex-col gap-y-1">
+                            <label class="text-[14px]">Username</label>
+                            <input id="username" type="text" class="bg-zinc-900 rounded-sm p-1" autocomplete="off" spellcheck="false">
+                        </div>
+
+                        <div class="flex flex-col gap-y-1">   
+                            <label for="password" class="text-[14px]">Password</label>
+                            <input id="password" type="password" class="bg-zinc-700/20 rounded-sm p-1">
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-y-4">
+                        <button id="register-button" class="bg-zinc-950 rounded-sm py-1 hover:bg-zinc-950/60 transition-all">Create Account</button>
+                        <hr class="mx-4" />
+                        <div class="flex flex-col gap-y-1">
+                            <button id="login-button" class="bg-zinc-950 rounded-sm py-1 hover:bg-zinc-950/60 transition-all">Sign In</button>
+                            <label class="text-[12px] select-none text-gray-200/60">Already have an account?</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="error-modal" class="opacity-0 bg-red-600 w-full absolute top-[calc(100%+1rem)] rounded-sm text-center p-2 text-wrap transition-opacity"></div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        async function register() {
+            const username = document.getElementById("username");
+            const password = document.getElementById("password");
+
+            if (!username.value || !password.value) {
+                errorModal("Username or Password Missing");
+                return;
+            }
+
+            const response = await fetch("/api/auth/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    username: username.value,
+                    password: password.value,
+                }),
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                window.location.href = "/login?created=true";
+            } else {
+                errorModal(data.message);
+            }
+        }
+
+        document.querySelector("#register-button").addEventListener("click", register);
+        document.querySelector("#login-button").addEventListener("click", () => {
+            window.location.href = "/login";
+        });
+    })
+</script>

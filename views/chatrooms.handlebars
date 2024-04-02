@@ -1,0 +1,215 @@
+<div class="flex flex-col gap-y-2 items-end w-full mx-5">
+    <button id="overlay-button" class="px-4 py-2 bg-zinc-900/80 rounded-md hover:bg-zinc-800/80 floating">Create New Chat</button>
+    <div id="chatroom-list" class="flex flex-col-reverse w-full gap-y-2">
+        {{#if chatrooms.length}}
+            {{#each chatrooms}}
+                <a href="/chatroom/{{id}}" class="chatroom flex justify-between items-center px-4 py-2 bg-zinc-900/80 hover:bg-zinc-800/80 transition-all rounded-sm">
+                    <span>{{name}}</span>
+                    <div class="relative">
+                        <div class="chatroom-info" data-owner="{{owner.display_name}}" data-timestamp="{{date created_at}}">
+                            <i class="fa-solid fa-circle-info"></i>
+                        </div>
+                    </div>
+                </a>
+            {{/each}}
+        {{else}}
+            <div class="flex justify-center px-5 py-4 mt-10 rounded-md transition-all sunken">
+                <span class="font-medium select-none">No Chatrooms yet, Try making one!</span>
+            </div>
+        {{/if}}
+    </div>
+    <div id="overlay" class="hidden flex items-center justify-center absolute w-full h-full z-10 top-0 left-0 bg-zinc-950/80">
+        <div id="overlay-background" class="absolute w-full h-full z-0 top-0 left-0"></div>
+        <div class="relative gap-y-2 h-fit min-w-[275px]">
+            <div class="bg-zinc-900/50 rounded-md pb-4 pt-1 border border-zinc-900 backdrop-blur">
+                <div class="flex flex-col justify-center gap-y-2">
+                    <div class="text-center">
+                        <h1 class="text-[24px] select-none">Create Room</h1>
+                    </div>
+                    <hr class="mx-2" />
+                    <div class="flex flex-col px-4 gap-y-4">
+                        <div class="flex flex-col gap-y-1">
+                            <label class="text-[14px]">Room Name</label>
+                            <input id="room-name" type="text" class="bg-zinc-900 rounded-sm p-1" autocomplete="off" spellcheck="false">
+                        </div>
+
+                        <div class="flex gap-x-4">
+                            <button id="cancel-button" class="flex flex-grow justify-center bg-zinc-950 rounded-sm py-1 hover:bg-zinc-950/60 transition-all text-center">Cancel</button>
+                            <button id="create-button" class="flex flex-grow justify-center bg-zinc-950 rounded-sm py-1 hover:bg-zinc-950/60 transition-all">Create</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let ws = null;
+    const env = "{{ environment }}";
+    if (env == "development") {
+        ws = new WebSocket("ws://localhost:3001/ws/chatrooms");;
+    } else {
+        ws = new WebSocket(`wss://${location.hostname}/ws/chatrooms`);
+    }
+
+    const chatrooms = {{{json chatrooms}}};
+
+    document.addEventListener("DOMContentLoaded", async () => {
+        const rawTemplate = await fetch("/templates/chatrooms.handlebars");
+        const templateSrc = await rawTemplate.text();
+        const template = Handlebars.compile(templateSrc);
+
+        Handlebars.registerHelper("date", timeAgo);
+        const rawUser = localStorage.getItem("user");
+        if (rawUser) {
+            chatrooms.forEach((chatroom) => {
+                chatroom.isOwner = isOwner(chatroom.owner.id);
+            });
+            const compiled = template({ chatrooms: chatrooms });
+            document.getElementById("chatroom-list").innerHTML = compiled;
+        }
+
+        ws.onmessage = (event) => {
+            const incoming = JSON.parse(event.data);
+            if (!incoming) {
+                return;
+            }
+
+            if (incoming.action === "new-chatroom") {
+                const chatroom = incoming.data;
+                chatroom.isOwner = isOwner(chatroom.owner.id);
+                if (chatroom.isOwner) {
+                    window.location.href = `/chatroom/${chatroom.id}`;
+                }
+
+                chatrooms.push(chatroom);
+            }
+            
+            if (incoming.action === "delete-chatroom") {
+                const chatroom_id = incoming.data;
+                const index = chatrooms.findIndex((chatroom) => chatroom.id === chatroom_id);
+                chatrooms.splice(index, 1);
+            }
+
+            const compiled = template({ chatrooms: chatrooms });
+            document.getElementById("chatroom-list").innerHTML = compiled;
+        };
+
+        const overlayElement = document.getElementById("overlay");
+        document.getElementById("overlay-button").addEventListener("click", () => {
+            overlayElement.classList.remove("hidden");
+        });
+
+        document.getElementById("overlay-background").addEventListener("click", () => {
+            overlayElement.classList.add("hidden");
+        });
+
+        document.getElementById("cancel-button").addEventListener("click", () => {
+            overlayElement.classList.add("hidden");
+        });
+
+        document.getElementById("create-button").addEventListener("click", async () => {
+            const roomNameElement = document.getElementById("room-name");
+
+            const roomName = roomNameElement.value;
+            if (!roomName) {
+                return;
+            }
+            roomNameElement.value = "";
+
+            const access_token = localStorage.getItem("access_token");
+            if (!access_token) {
+                return;
+            }
+
+            const wsRequest = { action: "new-chatroom", request: { name: roomName }, access_token };
+            ws.send(JSON.stringify(wsRequest));
+        });
+    })
+
+    ws.onopen = (event) => {
+        console.log("Waiting for new rooms...")
+    };
+
+    ws.onclose = (event) => {
+        console.log("WebSocket is closed now.");
+    };
+
+    ws.onerror = (event) => {
+        console.log("WebSocket has encountered an error.");
+    };
+
+    function isOwner(owner_id) {
+        const rawUser = localStorage.getItem("user");
+        if (!rawUser) {
+            return false;
+        }
+
+        const user = JSON.parse(rawUser);
+        return user.id === owner_id;
+    }
+
+    function timeAgo(date) {
+        const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+
+        const interval = Math.floor(seconds / 31536000);
+
+        if (interval > 1) {
+            return interval + " years ago";
+        }
+        if (interval === 1) {
+            return interval + " year ago";
+        }
+
+        const months = Math.floor(seconds / 2628000);
+        if (months > 1) {
+            return months + " months ago";
+        }
+        if (months === 1) {
+            return months + " month ago";
+        }
+
+        const days = Math.floor(seconds / 86400);
+        if (days > 1) {
+            return days + " days ago";
+        }
+        if (days === 1) {
+            return days + " day ago";
+        }
+
+        const hours = Math.floor(seconds / 3600);
+        if (hours > 1) {
+            return hours + " hours ago";
+        }
+        if (hours === 1) {
+            return hours + " hour ago";
+        }
+
+        const minutes = Math.floor(seconds / 60);
+        if (minutes > 1) {
+            return minutes + " minutes ago";
+        }
+        if (minutes === 1) {
+            return minutes + " minute ago";
+        }
+
+        return "just now";
+    }
+
+    function enterRoom(e, chatroom_id) {
+        e.stopPropagation();
+        window.location.href = `/chatroom/${chatroom_id}`;
+    }
+
+    async function deleteRoom(e, chatroom_id) {
+        e.stopPropagation();
+        const access_token = localStorage.getItem("access_token");
+        if (!access_token) {
+            return;
+        }
+
+        const wsRequest = { action: "delete-chatroom", request: { id: chatroom_id }, access_token };
+        ws.send(JSON.stringify(wsRequest));
+    }
+</script>

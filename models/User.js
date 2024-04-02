@@ -2,9 +2,9 @@ const { Model, DataTypes } = require("sequelize");
 
 const sequelize = require("../config/connection.js");
 
-class Chatroom extends Model {}
+class User extends Model {}
 
-Chatroom.init(
+User.init(
   {
     id: {
       type: DataTypes.STRING,
@@ -12,14 +12,15 @@ Chatroom.init(
       allowNull: false,
       unique: true,
     },
-    name: {
+    display_name: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
     },
-    owner_id: {
+    name_color: {
       type: DataTypes.STRING,
       allowNull: false,
+      defaultValue: "#ffffff",
     },
     created_at: {
       type: DataTypes.DATE,
@@ -32,8 +33,8 @@ Chatroom.init(
     timestamps: false,
     freezeTableName: true,
     underscored: true,
-    modelName: "chatroom",
+    modelName: "user",
   }
 );
 
-module.exports = Chatroom;
+module.exports = User;

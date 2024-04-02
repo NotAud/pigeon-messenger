@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Pigeon</title>
+    <link rel="stylesheet" href="/styles/main.css" />
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+    <script src="https://kit.fontawesome.com/7d14b767c7.js" crossorigin="anonymous"></script>
+  </head>
+
+  <body class="bg-zinc-950 text-gray-200">
+    <div class="flex flex-col items-center gap-y-5 h-full pb-10">
+      <header class="flex bg-zinc-900/20 w-full min-h-[65px] justify-between items-end py-2 px-4 border-b border-zinc-900">
+        <a href="/" class="text-[28px]">Pigeon</a>
+        <div id="login-container"></div>
+      </header>
+      <main class="flex container container-fluid h-full min-h-0">{{{ body }}}</main>
+    </div>
+  </body>
+</html>
+
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const rawTemplate = await fetch("/templates/login-button.handlebars");
+    const templateSrc = await rawTemplate.text();
+    const template = Handlebars.compile(templateSrc);
+
+    const data = await authGuard();
+    const compiled = template({ valid: data?.isValid, display_name: data?.user?.display_name });
+    document.getElementById("login-container").innerHTML = compiled;
+
+    const logoutButton = document.getElementById("logout-button");
+    if (logoutButton) {
+      logoutButton.addEventListener("click", async () => {  
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("user")
+
+        window.location.href = "/login";
+      })
+    }
+  });
+
+  async function authGuard() {
+    const accessToken = localStorage.getItem("access_token");
+    if (!accessToken) {
+      return null;
+    }
+
+    const response = await fetch("/api/auth/validate", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+        },
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      const user = localStorage.getItem("user");
+      if (!user) {
+        window.location.href = "/create-profile";
+      }
+
+      return { isValid: data, user: JSON.parse(user) };
+    } else {
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("user");
+        return null;
+    }
+  }
+</script>
