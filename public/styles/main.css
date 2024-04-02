@@ -675,6 +675,18 @@ video {
   width: 100%;
 }
 
+.w-2 {
+  width: 0.5rem;
+}
+
+.w-4 {
+  width: 1rem;
+}
+
+.w-8 {
+  width: 2rem;
+}
+
 .min-w-\[275px\] {
   min-width: 275px;
 }
@@ -916,6 +928,11 @@ video {
   padding-bottom: 1rem;
 }
 
+.px-3 {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
 .pb-10 {
   padding-bottom: 2.5rem;
 }
@@ -930,6 +947,14 @@ video {
 
 .pt-1 {
   padding-top: 0.25rem;
+}
+
+.pt-0 {
+  padding-top: 0px;
+}
+
+.pt-0\.5 {
+  padding-top: 0.125rem;
 }
 
 .text-center {
@@ -1146,4 +1171,20 @@ input {
 .hover\:text-zinc-400:hover {
   --tw-text-opacity: 1;
   color: rgb(161 161 170 / var(--tw-text-opacity));
+}
+
+.hover\:text-zinc-200\/40:hover {
+  color: rgb(228 228 231 / 0.4);
+}
+
+.hover\:text-zinc-300\/40:hover {
+  color: rgb(212 212 216 / 0.4);
+}
+
+.hover\:text-zinc-300\/80:hover {
+  color: rgb(212 212 216 / 0.8);
+}
+
+.hover\:text-zinc-400\/80:hover {
+  color: rgb(161 161 170 / 0.8);
 }
