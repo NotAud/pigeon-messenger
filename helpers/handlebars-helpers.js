@@ -8,4 +8,7 @@ module.exports = {
     const date = new Date(context);
     return timeAgo(date);
   },
+  environment: function () {
+    return process.env.NODE_ENV;
+  },
 };

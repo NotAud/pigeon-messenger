@@ -49,9 +49,15 @@
 </div>
 
 <script>
-    const ws = new WebSocket(
-        `wss://${location.hostname}/ws/chatrooms`,
-    );
+    //let ws = null;
+    //const env = "{{ environment }}";
+    //if (env == "development") {
+    //    ws = new WebSocket("ws://localhost:3001/ws/chatroom/{{ chatroom.id }}");
+    //} else {
+    //    ws = new WebSocket(`wss://${location.hostname}/ws/chatroom/{{ chatroom.id }}`);
+    //}
+
+    const ws = new WebSocket("ws://localhost:3001/ws/chatroom/{{ chatroom.id }}");
 
     const chatrooms = {{{json chatrooms}}};
 
