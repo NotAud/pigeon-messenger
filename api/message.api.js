@@ -18,7 +18,13 @@ async function getMessages(data) {
     const messages = await Message.findAll({
       where: { chatroom_id },
       attributes: ["message", "created_at"],
-      include: [{ model: User, as: "author", attributes: ["display_name"] }],
+      include: [
+        {
+          model: User,
+          as: "author",
+          attributes: ["id", "display_name", "created_at", "name_color"],
+        },
+      ],
       raw: true,
       nest: true,
     });
@@ -54,7 +60,11 @@ async function createMessage(access_token, data) {
     const messageWithAuthor = await Message.findByPk(messageData.id, {
       attributes: ["message", "created_at"],
       include: [
-        { model: User, as: "author", attributes: ["id", "display_name"] },
+        {
+          model: User,
+          as: "author",
+          attributes: ["id", "display_name", "name_color"],
+        },
       ],
     });
 

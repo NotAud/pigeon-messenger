@@ -13,9 +13,9 @@
                 </a>
             {{/each}}
         {{else}}
-            <button class="flex justify-center px-5 py-4 mt-10 rounded-md transition-all sunken hover:border hover:border-zinc-900/30 hover:scale-105">
+            <div class="flex justify-center px-5 py-4 mt-10 rounded-md transition-all sunken">
                 <span class="font-medium select-none">No Chatrooms yet, Try making one!</span>
-            </button>
+            </div>
         {{/if}}
     </div>
     <div id="overlay" class="hidden flex items-center justify-center absolute w-full h-full z-10 top-0 left-0 bg-zinc-950/80">
@@ -40,24 +40,18 @@
                     </div>
                 </div>
             </div>
-            {{!-- <div class="flex flex-col w-full absolute top-[calc(100%+1rem)]">
-                <div id="success-modal" class="opacity-0 bg-green-600 w-full rounded-sm text-center text-wrap transition-opacity"></div>
-                <div id="error-modal" class="opacity-0 bg-red-600 w-full rounded-sm text-center text-wrap transition-opacity"></div>
-            </div> --}}
         </div>
     </div>
 </div>
 
 <script>
-    //let ws = null;
-    //const env = "{{ environment }}";
-    //if (env == "development") {
-    //    ws = new WebSocket("ws://localhost:3001/ws/chatroom/{{ chatroom.id }}");
-    //} else {
-    //    ws = new WebSocket(`wss://${location.hostname}/ws/chatroom/{{ chatroom.id }}`);
-    //}
-
-    const ws = new WebSocket("ws://localhost:3001/ws/chatroom/{{ chatroom.id }}");
+    let ws = null;
+    const env = "{{ environment }}";
+    if (env == "development") {
+        ws = new WebSocket("ws://localhost:3001/ws/chatrooms");;
+    } else {
+        ws = new WebSocket(`wss://${location.hostname}/ws/chatrooms`);
+    }
 
     const chatrooms = {{{json chatrooms}}};
 
@@ -120,14 +114,12 @@
 
             const roomName = roomNameElement.value;
             if (!roomName) {
-                // errorModal("Room Name Missing");
                 return;
             }
             roomNameElement.value = "";
 
             const access_token = localStorage.getItem("access_token");
             if (!access_token) {
-                // errorModal("Unauthorized");
                 return;
             }
 
@@ -214,7 +206,6 @@
         e.stopPropagation();
         const access_token = localStorage.getItem("access_token");
         if (!access_token) {
-            // errorModal("Unauthorized");
             return;
         }
 

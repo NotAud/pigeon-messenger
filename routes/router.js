@@ -13,6 +13,7 @@ router.use(
 );
 router.use("/", require("../controllers/chatrooms.controller"));
 router.use("/chatroom", require("../controllers/chatroom.controller"));
+router.use("/profile", require("../controllers/profile.controller"));
 
 router.use((req, res) => {
   res.send("<h1>Wrong Route!</h1>");

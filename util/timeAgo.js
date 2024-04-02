@@ -42,7 +42,7 @@ function timeAgo(date) {
     return minutes + " minute ago";
   }
 
-  return "just now";
+  return "0 minutes ago";
 }
 
 module.exports = { timeAgo };

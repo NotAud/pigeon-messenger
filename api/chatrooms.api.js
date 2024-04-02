@@ -39,7 +39,7 @@ async function getChatroom(id) {
             {
               model: User,
               as: "author",
-              attributes: ["display_name", "created_at"],
+              attributes: ["id", "display_name", "created_at", "name_color"],
             },
           ],
         },
@@ -53,7 +53,7 @@ async function getChatroom(id) {
 
     return chatroom.get({ plain: true });
   } catch (err) {
-    throw { message: err.message };
+    return { message: err.message };
   }
 }
 

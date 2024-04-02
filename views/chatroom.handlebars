@@ -20,16 +20,18 @@
                 {{#each chatroom.messages}}
                     <div class="flex">
                         <div class="flex px-2">
-                            <span>{{ author.display_name }}: </span>
+                            <span style="color: #{{author.name_color}}">{{ author.display_name }}: </span>
                         </div>
                         <span>{{ message }}</span>
                     </div>
                 {{/each}}
             {{else}}
-                <h2>No messages yet</h2>
+                <div class="text-center w-full py-2 select-none">
+                    <h2 class="text-[16px]">No messages yet</h2>
+                </div>
             {{/if}}
         </div>
-        <input id="chat-input" class="h-10 bg-zinc-900/20 pl-3 border-t border-zinc-900 shrink-0" placeholder="Message {{chatroom.name}}"></input>
+        <input id="chat-input" class="h-10 bg-zinc-900/20 pl-3 border-t border-zinc-900 shrink-0" disabled placeholder="Message {{chatroom.name}}"></input>
     </div>
 </div>
 
@@ -54,6 +56,8 @@
 
         const access_token = localStorage.getItem("access_token");
         if (access_token) {
+            chatInput.attributes.removeNamedItem("disabled");
+
             chatInput.addEventListener("keydown", (event) => {
                 if (event.key === "Enter") {
                     const wsRequest = { action: "new-message", message: chatInput.value, chatroom_id, access_token };
@@ -62,6 +66,8 @@
                     chatInput.value = "";
                 }
             });
+        } else {
+            chatInput.placeholder = "Login to send messages";
         }
 
         const rawTemplate = await fetch("/templates/messages.handlebars");
@@ -75,7 +81,7 @@
                 return;
             }
 
-            messages.unshift({ author: incoming.data.author, message: incoming.data.message });
+            messages.unshift({ author: incoming.data.author, message: incoming.data.message, name_color: incoming.data.author.name_color});
 
             const compiled = template({ messages });
             chatMessages.innerHTML = compiled;

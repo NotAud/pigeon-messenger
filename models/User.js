@@ -17,6 +17,11 @@ User.init(
       allowNull: false,
       unique: true,
     },
+    name_color: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: "#ffffff",
+    },
     created_at: {
       type: DataTypes.DATE,
       allowNull: false,
