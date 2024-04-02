@@ -40,11 +40,21 @@ input {
 
 .chatroom-info:hover::after {
   @apply flex items-center bg-zinc-900 px-2 py-8 rounded-md;
-  content: "Created by: " attr(data-owner) "\a Created at: "attr(data-timestamp);
+  content: "Created by " attr(data-owner) "\a"attr(data-timestamp);
   white-space: pre;
   position: absolute;
   top: 0;
   right: calc(100% + 8px);
+  bottom: 0;
+}
+
+.color-info:hover::after {
+  @apply flex items-center bg-zinc-900 px-2 rounded-md text-[12px];
+  content: "Hex Code: " attr(data-color);
+  white-space: pre;
+  position: absolute;
+  top: 0;
+  left: calc(100% + 8px);
   bottom: 0;
 }
 
