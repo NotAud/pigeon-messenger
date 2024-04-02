@@ -20,7 +20,7 @@
                 {{#each chatroom.messages}}
                     <div class="flex">
                         <div class="flex px-2">
-                            <span style="color: #{{author.name_color}}">{{ author.display_name }}: </span>
+                            <a href="/profile/{{author.id}}" style="color: #{{author.name_color}}">{{ author.display_name }}: </a>
                         </div>
                         <span>{{ message }}</span>
                     </div>
