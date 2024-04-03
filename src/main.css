@@ -39,7 +39,7 @@ input {
 }
 
 .chatroom-info:hover::after {
-  @apply flex items-center bg-zinc-900 px-2 py-8 rounded-md;
+  @apply flex justify-center text-center items-center bg-zinc-900 px-2 py-8 rounded-md;
   content: "Created by " attr(data-owner) "\a"attr(data-timestamp);
   white-space: pre;
   position: absolute;

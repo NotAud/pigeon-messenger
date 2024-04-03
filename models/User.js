@@ -20,7 +20,7 @@ User.init(
     name_color: {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: "#ffffff",
+      defaultValue: "ffffff",
     },
     created_at: {
       type: DataTypes.DATE,

@@ -29,6 +29,11 @@ async function createUser(token, data) {
     return { message: "Missing required fields" };
   }
 
+  const nameTaken = await User.findOne({ where: { display_name } });
+  if (nameTaken) {
+    return { message: "Display name is already taken" };
+  }
+
   try {
     const userData = await User.create({
       id: user.id,

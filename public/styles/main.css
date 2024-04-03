@@ -1058,6 +1058,7 @@ input {
 .chatroom-info:hover::after {
   display: flex;
   align-items: center;
+  justify-content: center;
   border-radius: 0.375rem;
   --tw-bg-opacity: 1;
   background-color: rgb(24 24 27 / var(--tw-bg-opacity));
@@ -1065,6 +1066,7 @@ input {
   padding-right: 0.5rem;
   padding-top: 2rem;
   padding-bottom: 2rem;
+  text-align: center;
   content: "Created by " attr(data-owner) "\a"attr(data-timestamp);
   white-space: pre;
   position: absolute;

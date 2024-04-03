@@ -65,6 +65,14 @@
       // If the user doesn't have a profile, redirect them to create one
       if (!user) {
         window.location.href = "/create-profile";
+        return;
+      }
+
+      if (!JSON.parse(user).display_name) {
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("user");
+        window.location.href = "/login";
+        return;
       }
 
       return { isValid: data, user: JSON.parse(user) };
