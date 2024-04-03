@@ -1,3 +1,4 @@
+// Convert datetime to human readable time ago
 function timeAgo(date) {
   const seconds = Math.floor((new Date() - date) / 1000);
 

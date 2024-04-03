@@ -1,5 +1,6 @@
 const { timeAgo } = require("../util/timeAgo");
 
+// Helpers for dealing with api data before rendering it
 module.exports = {
   json: function (context) {
     return JSON.stringify(context);

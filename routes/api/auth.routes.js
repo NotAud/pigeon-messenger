@@ -7,6 +7,7 @@ const { useAuth } = require("../../util/useAuth");
 
 const auth = useAuth();
 
+// Register a new user
 router.post("/register", async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) {
@@ -15,12 +16,14 @@ router.post("/register", async (req, res) => {
     });
   }
 
+  // Verify user is unique
   const verifyUsername = await Auth.findOne({ where: { username } });
   if (verifyUsername) {
     return res.status(400).json({ message: "Username already exists" });
   }
 
   try {
+    // Generate unique UUID for user hash and hash password
     const userID = uuidv4();
     bcrypt.hash(password, 10).then((hash) => {
       const user = new Auth({
@@ -43,6 +46,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
+// Login a user
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
   const auth = await Auth.findOne({
@@ -70,6 +74,7 @@ router.post("/login", async (req, res) => {
   });
 });
 
+// Validate a token
 router.get("/validate", async (req, res) => {
   const token = req.headers.authorization.replace("Bearer ", "");
   const user = auth.verifyToken(token);

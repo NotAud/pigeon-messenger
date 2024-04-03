@@ -40,6 +40,7 @@
     }
   });
 
+  // Validates the user's access token and possibly routes based on account status
   async function authGuard() {
     const accessToken = localStorage.getItem("access_token");
     if (!accessToken) {
@@ -56,14 +57,19 @@
 
     const data = await response.json();
 
+    // Validate Access Token is still valid
     if (response.ok) {
       const user = localStorage.getItem("user");
+
+      // User has an account but might not have a profile
+      // If the user doesn't have a profile, redirect them to create one
       if (!user) {
         window.location.href = "/create-profile";
       }
 
       return { isValid: data, user: JSON.parse(user) };
     } else {
+        // Access Token is invalid - Reset Session
         localStorage.removeItem("access_token");
         localStorage.removeItem("user");
         return null;
