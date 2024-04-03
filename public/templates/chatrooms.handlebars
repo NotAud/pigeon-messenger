@@ -1,0 +1,21 @@
+{{#if chatrooms.length}}
+    {{#each chatrooms}}
+        <div onclick="enterRoom(event, '{{id}}')" class="flex cursor-pointer justify-between items-center px-4 py-2 bg-zinc-900/80 hover:bg-zinc-800/80 transition-all rounded-sm">
+            <span>{{name}}</span>
+            <div class="flex gap-x-4">
+                {{#if isOwner}}
+                    <button onclick="deleteRoom(event, '{{id}}')" class="bg-red-600/20 px-2 rounded-md">Delete</button>
+                {{/if}}
+                <div class="relative flex items-center gap-x-2">
+                    <div class="chatroom-info" data-owner="{{owner.display_name}}" data-timestamp="{{date created_at}}">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/each}}
+{{else}}
+    <div class="flex justify-center px-5 py-4 mt-10 rounded-md transition-all sunken">
+        <span class="font-medium select-none">No Chatrooms yet, Try making one!</span>
+    </div>
+{{/if}}

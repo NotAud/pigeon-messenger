@@ -1,0 +1,6 @@
+-- DROP DATABASE
+DROP DATABASE IF EXISTS messenger_db;
+
+-- CREATE DATABASE
+CREATE DATABASE messenger_db;
+

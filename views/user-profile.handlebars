@@ -1,0 +1,26 @@
+<div class="flex flex-col gap-y-4 w-full">
+    <span class="text-[24px]">Profile</span>
+    <hr />
+    <div class="flex flex-col px-1 text-[20px] gap-y-4">
+        <div class="flex gap-x-2 w-fit border border-zinc-900/80 p-3 rounded-md">
+            <span>Display Name: </span>
+            <span>{{ profile.display_name }}</span>
+        </div>
+        <div class="flex gap-x-2 w-fit border border-zinc-900/80 p-3 rounded-md relative">
+            <span>Name Color: </span>
+            <div id="color-circle" class="p-4 rounded-full color-info hover:cursor-pointer hover:scale-105 transition-all" style="background-color: #{{profile.name_color}}" data-color="#{{profile.name_color}}"></div>
+        </div>
+        <div class="flex gap-x-2 w-fit border border-zinc-900/80 p-3 rounded-md">
+            <span>Account Created: </span>
+            <span>{{ date profile.created_at }}</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    const colorCircle = document.getElementById('color-circle');
+    colorCircle.addEventListener('click', () => {
+        const color = colorCircle.dataset.color;
+        navigator.clipboard.writeText(color);
+    });
+</script>

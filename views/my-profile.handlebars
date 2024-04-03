@@ -1,0 +1,176 @@
+<div class="flex flex-col gap-y-4 w-full">
+    <span class="text-[24px]">Profile</span>
+    <hr />
+    <div class="flex flex-col px-1 text-[20px] gap-y-4">
+        <div class="flex flex-col gap-y-2 w-fit border border-zinc-900/80 p-3 rounded-md">
+            <span>Display Name</span>
+            <div class="flex gap-x-4">
+                <button id="edit-display-name" class="bg-zinc-900/30 rounded-sm py-0.5 px-2 hover:bg-zinc-900/50 transition-all">Edit</button>
+                <span id="display-name"></span>
+            </div>
+        </div>
+        <div class="flex flex-col gap-y-2 w-fit border border-zinc-900/80 p-3 rounded-md">
+            <span>Name Color</span>
+            <div class="flex gap-x-4">
+                <button id="edit-name-color" class="bg-zinc-900/30 rounded-sm py-0.5 px-2 hover:bg-zinc-900/50 transition-all">Edit</button>
+                <div id="name-color" class="p-4 rounded-full color-info hover:cursor-pointer hover:scale-105 transition-all"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="overlay" class="hidden flex items-center justify-center absolute w-full h-full z-10 top-0 left-0 bg-zinc-950/80">
+        <div id="overlay-background" class="absolute w-full h-full z-0 top-0 left-0"></div>
+        <div id="overlay-template" class="relative gap-y-2 h-fit min-w-[275px]"></div>
+    </div>
+
+    <input id="display-name-input-template" type="text" class="hidden bg-zinc-900 rounded-sm p-1" autocomplete="off" spellcheck="false">
+    <input id="name-color-input-template" type="color" class="hidden rounded-sm w-full cursor-pointer p-0 appearance-none" autocomplete="off" spellcheck="false">
+</div>
+
+<script>
+    const rawUser = localStorage.getItem("user");
+    const access_token = localStorage.getItem("access_token");
+    if (!rawUser || !access_token) {
+      window.location.href = "/";
+    }
+    
+    const user = JSON.parse(rawUser);
+    let display_name = "";
+    let name_color = "";
+
+    document.addEventListener("DOMContentLoaded", async () => {
+        const rawTemplate = await fetch("/templates/overlay.handlebars");
+        const templateSrc = await rawTemplate.text();
+        const template = Handlebars.compile(templateSrc);
+
+        const response = await fetch(`/api/user/${user.id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+
+        const data = await response.json();
+
+        display_name = data.display_name;
+        name_color = data.name_color;
+        updateProfileFields();
+
+        document.getElementById("name-color").style.backgroundColor = `#${data.name_color}`;
+
+        document.getElementById("edit-display-name").addEventListener("click", () => {
+            editOverlay(template, "display-name")
+        });
+
+        document.getElementById("edit-name-color").addEventListener("click", () => {
+            editOverlay(template, "name-color")
+        });
+
+        const nameColorElement = document.getElementById("name-color");
+        nameColorElement.addEventListener('click', () => {
+            const color = nameColorElement.dataset.color;
+            navigator.clipboard.writeText(color);
+        });
+
+        const overlayElement = document.getElementById("overlay");
+        document.getElementById("overlay-background").addEventListener("click", () => {
+            overlayElement.classList.add("hidden");
+        });
+    });
+
+    async function editOverlay(template, field) {
+        let overlayInput = null;
+        let title = ""
+        let label = ""
+        if (field === "display-name") {
+            const inputElement = document.getElementById("display-name-input-template");
+            overlayInput = inputElement.cloneNode(true);
+            overlayInput.id = "display-name-input";
+
+            title = "Edit Display Name";
+            label = "Display Name";
+        } else if (field === "name-color") {
+            const inputElement = document.getElementById("name-color-input-template");
+            overlayInput = inputElement.cloneNode(true);
+            overlayInput.id = "name-color-input";
+            overlayInput.setAttribute("value", `#${name_color}`);
+            overlayInput.style.backgroundColor = `#${name_color}`;
+
+            title = "Edit Name Color";
+            label = "Name Color";
+        }
+
+        if (!overlayInput) return;
+
+        overlayInput.classList.remove("hidden");
+
+        const overlayElement = document.getElementById("overlay");
+        const compiled = template({ title, label, input: overlayInput.outerHTML});
+        document.getElementById("overlay-template").innerHTML = compiled;
+
+
+        const submitButton = document.getElementById("submit-button");
+        const cancelButton = document.getElementById("cancel-button");
+
+        submitButton.addEventListener("click", async () => {
+            let request = null;
+            if (field === "display-name") {
+                const displayName = document.getElementById("display-name-input").value;
+                request = {
+                    display_name: displayName
+                };
+            }
+
+            if (field === "name-color") {
+                const nameColor = document.getElementById("name-color-input").value;
+                request = {
+                    name_color: nameColor.slice(1)
+                };
+            }
+            
+            const response = await fetch(`/api/user`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${access_token}`,
+                },
+                body: JSON.stringify(request)
+            });
+
+            if (!response.ok) {
+                console.log("Request Failed")
+                return;
+            }
+
+            if (field === "display-name") {
+                display_name = request.display_name;
+            } else if (field === "name-color") {
+                name_color = request.name_color;
+            }
+
+            updateProfileFields();
+
+            submitButton.removeEventListener("click", () => {});
+            cancelButton.removeEventListener("click", () => {});
+            overlayElement.classList.add("hidden");
+        });
+
+        cancelButton.addEventListener("click", () => {
+            submitButton.removeEventListener("click", () => {});
+            cancelButton.removeEventListener("click", () => {});
+            overlayElement.classList.add("hidden");
+        });
+
+        overlayElement.classList.remove("hidden");
+    }
+    
+    async function updateProfileFields() {
+        const displayNameElement = document.getElementById("display-name");
+        displayNameElement.textContent = display_name;
+        displayNameElement.style.color = `#${name_color}`;
+
+        const nameColorElement = document.getElementById("name-color");
+        nameColorElement.style.backgroundColor = `#${name_color}`;
+        nameColorElement.setAttribute("data-color", `#${name_color}`);
+    }
+</script>
