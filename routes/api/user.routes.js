@@ -5,6 +5,7 @@ const {
   updateProfile,
 } = require("../../api/user.api.js");
 
+// Create a new user
 router.post("/", async (req, res) => {
   try {
     const token = req.headers.authorization.replace("Bearer ", "");
@@ -15,6 +16,7 @@ router.post("/", async (req, res) => {
   }
 });
 
+// Update a user profile
 router.patch("/", async (req, res) => {
   try {
     const token = req.headers.authorization.replace("Bearer ", "");
@@ -25,6 +27,7 @@ router.patch("/", async (req, res) => {
   }
 });
 
+// Get a user profile
 router.get("/:userID", async (req, res) => {
   try {
     if (!req.params.userID) {

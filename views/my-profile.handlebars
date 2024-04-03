@@ -13,7 +13,7 @@
             <span>Name Color</span>
             <div class="flex gap-x-4">
                 <button id="edit-name-color" class="bg-zinc-900/30 rounded-sm py-0.5 px-2 hover:bg-zinc-900/50 transition-all">Edit</button>
-                <div id="name-color" class="p-4 rounded-full"></div>
+                <div id="name-color" class="p-4 rounded-full color-info hover:cursor-pointer hover:scale-105 transition-all"></div>
             </div>
         </div>
     </div>
@@ -64,6 +64,12 @@
 
         document.getElementById("edit-name-color").addEventListener("click", () => {
             editOverlay(template, "name-color")
+        });
+
+        const nameColorElement = document.getElementById("name-color");
+        nameColorElement.addEventListener('click', () => {
+            const color = nameColorElement.dataset.color;
+            navigator.clipboard.writeText(color);
         });
 
         const overlayElement = document.getElementById("overlay");
@@ -163,6 +169,8 @@
         displayNameElement.textContent = display_name;
         displayNameElement.style.color = `#${name_color}`;
 
-        document.getElementById("name-color").style.backgroundColor = `#${name_color}`;
+        const nameColorElement = document.getElementById("name-color");
+        nameColorElement.style.backgroundColor = `#${name_color}`;
+        nameColorElement.setAttribute("data-color", `#${name_color}`);
     }
 </script>

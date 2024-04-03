@@ -5,6 +5,7 @@ const {
   deleteChatroom,
 } = require("../../api/chatrooms.api.js");
 
+// Create a new chatroom
 router.post("/", async (req, res) => {
   try {
     const access_token = req.headers.authorization.replace("Bearer ", "");
@@ -16,6 +17,7 @@ router.post("/", async (req, res) => {
   }
 });
 
+// Get a chatroom by ID
 router.get("/", async (req, res) => {
   const { id } = req.body;
   if (!id) {
@@ -32,6 +34,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+// Delete a chatroom by ID
 router.delete("/", async (req, res) => {
   const { id } = req.body;
   if (!id) {

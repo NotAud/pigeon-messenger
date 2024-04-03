@@ -1,6 +1,8 @@
 const router = require("express").Router();
 const { createMessage } = require("../../api/message.api");
 
+// Keep track of websocket connections to each chatroom
+// Allows for broadcasting messages to all connected clients in specific chatroom
 const connections = {};
 
 router.ws("/:chatroomID", function (ws, req) {

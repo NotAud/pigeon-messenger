@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const { getChatrooms } = require("../../api/chatrooms.api.js");
 
+// Gets all chatrooms
 router.get("/", async (req, res) => {
   try {
     const chatroomData = await getChatrooms();
