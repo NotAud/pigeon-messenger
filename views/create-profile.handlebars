@@ -71,6 +71,11 @@
             });
 
             const data = await response.json();
+            if (data.message) {
+                errorModal(data.message);
+                return;
+            }
+            
 
             if (response.ok) {
                 localStorage.setItem("user", JSON.stringify(data));

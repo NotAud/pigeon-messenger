@@ -30,7 +30,6 @@
                 </div>
             </div>
         </div>
-        <div id="error-modal" class="opacity-0 bg-red-600 w-full absolute top-[calc(100%+1rem)] rounded-sm text-center p-2 text-wrap transition-opacity"></div>
     </div>
 </div>
 
@@ -41,7 +40,6 @@
             const password = document.getElementById("password");
 
             if (!username.value || !password.value) {
-                errorModal("Username or Password Missing");
                 return;
             }
 
@@ -59,8 +57,6 @@
             const data = await response.json();
             if (response.ok) {
                 window.location.href = "/login?created=true";
-            } else {
-                errorModal(data.message);
             }
         }
 
