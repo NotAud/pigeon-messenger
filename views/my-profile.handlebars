@@ -148,6 +148,13 @@
                 name_color = request.name_color;
             }
 
+            // Update information everywhere else
+            const localUser = JSON.parse(localStorage.getItem("user"));
+            localUser.display_name = display_name;
+            localUser.name_color = name_color;
+            localStorage.setItem("user", JSON.stringify(localUser));
+            document.getElementById("header-display-name").textContent = display_name;
+
             updateProfileFields();
 
             submitButton.removeEventListener("click", () => {});
